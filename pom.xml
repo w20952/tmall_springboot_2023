@@ -57,6 +57,13 @@
 			<version>1.9.22</version>
 		</dependency>
 
+		<!-- Add fastjson support -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.70</version>
+		</dependency>
+
 		<!-- mysql-->
 		<dependency>
 			<groupId>mysql</groupId>

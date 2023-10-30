@@ -1,11 +1,13 @@
 package com.david.tmall_springboot_2023.web;
 
+import com.alibaba.fastjson.JSONObject;
 import com.david.tmall_springboot_2023.pojo.*;
 import com.david.tmall_springboot_2023.service.CategoryService;
 import com.david.tmall_springboot_2023.service.ProductImageService;
 import com.david.tmall_springboot_2023.service.ProductService;
 import com.david.tmall_springboot_2023.service.PropertyService;
 import com.david.tmall_springboot_2023.util.Page4Navigator;
+import com.david.tmall_springboot_2023.util.RequestParameterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,10 +52,18 @@ public class AdminPageController {
     /*
     查询全部分类
      */
-    @GetMapping("/admin_category_list")
+    @PostMapping("/admin_category_list")
     public String listCategory(@RequestParam(value = "start", defaultValue = "0") int start,
-                               @RequestParam(value = "size", defaultValue = "5") int size, Model model, HttpServletResponse response){
-       Page4Navigator<Category> page4Navigator = categoryController.list(start, size);
+                               @RequestParam(value = "size", defaultValue = "5") int size, Model model, HttpServletRequest request, HttpServletResponse response){
+        try {
+            JSONObject object = RequestParameterHelper.getRequestJson(request);
+            String str = JSONObject.toJSONString(object);
+            System.out.println("JSONString : " + str);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Page4Navigator<Category> page4Navigator = categoryController.list(start, size);
        model.addAttribute("list", page4Navigator);
 
         return "admin/listCategory";
