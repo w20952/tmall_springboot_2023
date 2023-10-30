@@ -1,0 +1,21 @@
+<div class="adminpage" th:fragment="html">
+
+    <nav>
+        <ul class="pagination">
+            <li class="disabled">
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li th:each="page: ${list.navigatePageNums}" >
+                <a th:text="${page}"  th:style="${page} == ${list.navigatePageNums[__${list.number}__]} ? 'font-weight:bold'" th:href="'?start=' + (${page}-1) * 5"></a>
+            </li>
+            <li class="disabled">
+                <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>

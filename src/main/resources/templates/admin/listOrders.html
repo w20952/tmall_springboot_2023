@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin/adminHeader::html('listOrders')"></head>
+
+<script>
+
+    $(document).ready(function() {
+        $('.expand-btn').click(function() {
+            $(this).closest('tr').next('.expandable-row').toggle();
+        });
+    });
+
+</script>
+
+
+<body>
+
+    <div>
+
+        <table class="table table-striped table-bordered table-hover table-condensed">
+
+            <thead>
+                <tr class="success">
+                    <th>ID</th>
+                    <th>状态</th>
+                    <th>金额</th>
+                    <th>商品数量</th>
+                    <th>买家名称</th>
+                    <th>创建时间</th>
+                    <th>支付时间</th>
+                    <th>发货时间</th>
+                    <th>确认收货时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <template th:each="order : ${page.contents}">
+                    <tr>
+                        <td th:text="${order.id}"></td>
+                        <td th:text="${order.status}"></td>
+                        <td th:text="${order.totalNumber}"></td>
+                        <td th:text="${order.total}"></td>
+                        <td th:text="${order.receiver}"></td>
+                        <td th:text="${order.createDate}"></td>
+                        <td th:text="${order.payDate}"></td>
+                        <td th:text="${order.deliveryDate}"></td>
+                        <td th:text="${order.confirmDate}"></td>
+                        <td><button class="expand-btn"></button></td>
+                    </tr>
+                    <tr class="expandable-row">
+                        <td>
+                            <div class="expandable-content">
+                                <span> contents here! </span>
+                            </div>
+                        </td>
+                    </tr>
+                </template>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</body>
+
+
+
+</html>

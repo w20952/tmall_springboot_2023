@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin/adminHeader::html('listOrders')"></head>
+
+<body>
+
+<script>
+    $(document).ready(function () {
+        $('.expand-btn').click(function () {
+            $(this).closest('tr').next('.expandable-row').toggle();
+        });
+    });
+</script>
+
+
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>Column 1</th>
+            <th>Column 2</th>
+            <th>Column 3</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Row 1 Column 1</td>
+            <td>Row 1 Column 2</td>
+            <td>Row 1 Column 3</td>
+            <td>
+                <button class="expand-btn">Expand</button>
+            </td>
+        </tr>
+        <tr class="expandable-row">
+            <td colspan="4">
+                <div class="expandable-content">
+                    <p>Additional details for Row 1.</p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Row 2 Column 1</td>
+            <td>Row 2 Column 2</td>
+            <td>Row 2 Column 3</td>
+            <td>
+                <button class="expand-btn">Expand</button>
+            </td>
+        </tr>
+        <tr class="expandable-row">
+            <td colspan="4">
+                <div class="expandable-content">
+                    <p>Additional details for Row 2.</p>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+
+</html>

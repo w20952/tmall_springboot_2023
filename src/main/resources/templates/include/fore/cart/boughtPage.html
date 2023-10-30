@@ -1,0 +1,59 @@
+<div th:fragment="html">
+
+    <div class="boughtDiv">
+
+        <div class="orderType">
+            <div class=""><a href="#nowhere" orderStatus=all"">所有订单</a></div>
+            <div class=""><a href="#nowhere" orderStatus="waitPay">待付款</a></div>
+            <div class=""><a href="#nowhere" orderStatus="waitDelivery">待发货</a></div>
+            <div class=""><a href="#nowhere" orderStatus="waitConfirm">待收货</a></div>
+            <div class=""><a href="#nowhere" orderStatus="waitReview">待评价</a></div>
+            <div class="orderTypeLastOne"></div>
+        </div>
+
+        <div style="clear:both"></div>
+
+        <div class="orderListTitle">
+            <table class="orderListTitleTable">
+                <tr>
+                    <td>宝贝</td>
+                    <td width="100px">单价</td>
+                    <td width="100px">数量</td>
+                    <td width="100px">实付款</td>
+                    <td width="100px">交易操作</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="OrderList">
+            <table class="orderListTitleTable" th:each="order : ${orders}">
+                <thead>
+                    <tr>
+                        <td th:text="${order.id}"></td>
+                        <td width="100px">天猫商城</td>
+                        <td width="100px"></td>
+                        <td width="100px">和我联系</td>
+                        <td width="100px"><a href="#nowhere"><span class="glyphicon glyphicon-trash"></span></a></td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="oi : ${order.orderItems}">
+                        <td th:text="${oi.product.name}"></td>
+                        <td th:text="${oi.product.promotePrice}"></td>
+                        <td th:text="${oi.number}"></td>
+                        <td th:text="${order.total}"></td>
+                        <td th:text="${order.statusDesc}"></td>
+                    </tr>
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+</div>

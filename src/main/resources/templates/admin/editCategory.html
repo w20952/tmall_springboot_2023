@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin/adminHeader::html('listCategory')"></head>
+<body>
+
+<div th:replace="include/admin/adminNavigator::html"></div>
+
+
+<div></div>
+<br>
+<br>
+<br>
+<div class="listDataTableDiv">
+
+    <script th:inline="javascript">
+
+        $(function () {
+            $("#uploadForm").submit(function (event) {
+                event.preventDefault();
+
+                var formData = new FormData();
+                var file_data = $("#file").prop("files")[0];
+                var file_name = $("#filename").val();
+                formData.append("file", file_data);
+                formData.append("filename", file_name);
+
+                $.ajax({
+                    url: "categories/" + [[${category.id}]],
+                    type: "PUT",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        location.href="admin_category_list";
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            });
+        });
+
+    </script>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+        <table class="table table-striped table-bordered table-hover table-condensed">
+
+            <tr>
+                <td>分类名称</td>
+                <td><input height="40px" type="text" id="filename" name="filename" th:placeholder="${category.name}">
+                </td>
+            </tr>
+
+            <tr>
+                <td>分类图片</td>
+                <td><img height="40px" th:src="'img/category/' + ${category.id} + '.jpg'"></td>
+            </tr>
+
+            <tr>
+                <td>替换图片</td>
+                <td><input id="file" type="file" name="file" value="请选择替换文件"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <input class="submit" type="submit" value="提交">
+                </td>
+            </tr>
+
+        </table>
+    </form>
+
+</div>
+
+</body>

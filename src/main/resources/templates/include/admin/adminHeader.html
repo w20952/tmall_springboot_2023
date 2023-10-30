@@ -1,0 +1,85 @@
+<div th:fragment="html(title)">
+
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script th:src="@{/js/bootstrap/3.3.6/bootstrap.min.js}"></script>
+
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/back/style.css}" rel="stylesheet">
+
+    <script th:inline="javascript">
+
+        var id = 0;
+
+        // $(function(){
+        //     $("#delete").click(function(){
+        //         $("#deleteForm").submit();
+        //     });
+        //
+        // })
+
+        $(function(){
+            $("a.deleteBtn").click(function () {
+                var confirmDelete = confirm("确认要删除? ");
+                id = $(this).attr("id");
+                if (confirmDelete) {
+                    $.ajax({
+                        url: 'categories/' + id,
+                        type: "delete",
+                        success: function (data) {
+                            location.href = "admin_category_list";
+                        }
+                    });
+                }
+                return false;
+            });
+        });
+
+        /*
+                    $("button.deleteBtn").click(function () {
+                        id = $(this).attr("id");
+                        $("#deleteConfirmModal").show();
+                    });
+
+                    $("button.deleteConfirmButton").click(function () {
+                        deleteConfirm = true;
+                        $("#deleteConfirmModal").hide();
+                    });
+        */
+
+        // $("#deleteConfirmModal").on('hidden.bs.modal', function (e) {
+        //     alert(id);
+        //         if (deleteConfirm) {
+        //             $.ajax({
+        //                 url: 'categories/' + id,
+        //                 type: "delete"
+        //             });
+        //         }
+        // })
+
+        function checkEmpty(value, text) {
+            if (value == null || value.length == 0) {
+                alert(text + "不能为空");
+                return false;
+            }
+            return true;
+        }
+
+    </script>
+
+    <div class="modal" id="deleteConfirmModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog deleteConfirmModalDiv">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title">确认删除？</h4>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+                    <button class="btn btn-primary deleteConfirmButton" id="submit" type="button">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

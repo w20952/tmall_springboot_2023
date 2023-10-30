@@ -1,0 +1,229 @@
+<div th:fragment="html">
+
+<script>
+
+    $(function() {
+
+        $("img.selectAllItem").click(function () {
+            var selectit = $(this).attr("selectit");
+
+            if (selectit == "selectit") {
+                $("img.selectAllItem").attr("src", "img/site/cartNotSelected.png");
+                $(this).attr("selectit", "false");
+
+                $(".cartProductItemIfSelected").each(function () {
+                    $(this).attr("src", "img/site/cartNotSelected.png");
+                    $(this).attr("selectit", "false");
+                    $(this).parents("tr.cartProductItemTR").css("background-color", "#FFF");
+                });
+            }
+            else {
+                $("img.selectAllItem").attr("src", "img/site/cartSelected.png");
+                $(this).attr("selectit", "selectit");
+
+                $(".cartProductItemIfSelected").each(function () {
+                    $(this).attr("src", "img/site/cartSelected.png");
+                    $(this).attr("selectit","selectit");
+                    $(this).parents("tr.cartProductItemTR").css("background-color", "#FFF8E1");
+                });
+            }
+            syncCreateOrderButton();
+        });
+
+        $("img.cartProductItemIfSelected").click(function(){
+
+            var selectit = $(this).attr("selectit");
+
+            if(selectit == "selectit"){
+                $(this).attr("src","img/site/cartNotSelected.png");
+                $(this).attr("selectit", "false");
+                $(this).parents("tr.cartProductItemTR").css("background-color", "#FFF");
+            }
+            else{
+                $(this).attr("src", "img/site/cartSelected.png");
+                $(this).attr("selectit", "selectit");
+                $(this).parents("tr.cartProductItemTR").css("background-color", "#FFF8E1");
+            }
+
+
+
+        });
+
+        $(".orderItemNumberSetting").keyup(function(){
+            var pid = $(this).attr("id");
+            var stock = $("span.orderItemStock[id=" + pid + "]").text();
+            var price = $("span.orderItemPromotePrice[id=" + pid + "]").text();
+            var num = $(".orderItemNumberSetting[id=" + pid +"]").val();
+            num = parseInt(num);
+
+            if(isNaN(num)) num = 1;
+            if(num <= 0) num = 1;
+            if(num > stock) num = stock;
+
+            $(".orderItemNumberSetting[id=" + pid + "]").val(num);
+        });
+
+        $(".numberPlus").click(function(){
+            var pid = $(this).attr("id");
+            var num = $(".orderItemNumberSetting[id=" + pid + "]").val();
+            var stock = $(".orderItemStock[id=" + pid + "]").text();
+            num ++;
+
+            if (num > stock)
+                num = stock;
+
+            $(".orderItemNumberSetting[id= " + pid +"]").val(num);
+        });
+
+        $(".numberMinus").click(function(){
+            var pid = $(this).attr("id");
+            var num = $(".orderItemNumberSetting[id=" + pid + "]").val();
+           num --;
+
+            if(num <= 0)
+                num = 0;
+            $(".orderItemNumberSetting[id=" + pid + "]").val(num);
+        });
+
+        function syncCreateOrderButton() {
+            var selectAny = false;
+            $(".cartProductItemIfSelected").each(function () {
+                if ($(this).attr("selectit") == "selectit") {
+                    selectAny = true;
+                }
+            });
+            if (selectAny) {
+                $("button.createOrderButton").css("background-color", "#C40000");
+                $("button.createOrderButton").removeAttr("disabled");
+            }
+            else {
+                $("button.createOrderButton").css("background-color", "#AAAAAA");
+                $("button.createOrderButton").removeAttr("disabled", "disabled");
+            }
+        }
+
+        function syncSelect() {
+            var selectAll = true;
+
+            $(".cartProductItemIfSelected").each(function () {
+                if ($(this).attr("selectit") == false) {
+                    selectAll = false;
+                }
+            });
+
+            if (selectAll) {
+                $("img.selectAllItem").attr("src", "@{/img/site/cartSelected.png");
+            } else {
+                $("img.selectAllItem").attr("src", "@{/img/site/cartNotSelected.png}");
+            }
+        }
+
+        $("button.createOrderButton").click(function(){
+            var params = "";
+            $(".cartProductItemIfSelected").each(function(){
+                if($(this).attr("selectit") == "selectit"){
+                    var oiid = $(this).attr("id");
+                    params += "&oiid=" + oiid;
+                }
+            });
+            params = params.substring(1);
+            location.href = "buy?" + params;
+        });
+    })
+
+
+</script>
+
+<div class="cartDiv">
+
+    <div class="">
+        <table class="cartProductTable">
+            <thead>
+                <tr>
+                    <th class="selectAndImage">
+                        <img th:src="@{/img/site/cartNotSelected.png}" class="selectAllItem" selectit="false">
+                        <span th:text="全选"></span>
+                    </th>
+                    <th>商品信息</th>
+                    <th>单价</th>
+                    <th>数量</th>
+                    <th>金额</th>
+                    <th class="operation">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="oi : ${list}" class="cartProductItemTR">
+                    <td>
+                        <img th:src="@{/img/site/cartNotSelected.png}" class="cartProductItemIfSelected" selectit="false" th:id="${oi.id}">
+                        <img width="40px" th:src="@{/img/productSingle/} + ${oi.product.firstProductImage.id} + '.jpg'" class="cartProductImg">
+                    </td>
+                    <td>
+                        <div class="cartProductLinkOutDiv">
+                            <a class="cartProductLink" href="#nowhere" th:text="${oi.product.name}"></a>
+                            <div class="cartProductLinkInnerDiv">
+                                <img title="信用卡支付" th:src="@{/img/site/creditcard.png}">
+                                <img title="消费保障" th:src="@{/img/site/promise.png}">
+                                <img title="7天退货承诺" th:src="@{/img/site/7day.png}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="cartProductItemOriginalPrice" th:text="${oi.product.originalPrice}"></span><br>
+                        <span class="cartProductItemPromotePrice" th:text="${oi.product.promotePrice}"></span>
+                    </td>
+                    <td>
+                        <div class="cartProductChangeNumberDiv">
+                            <span th:id="${oi.product.id}" class="hidden orderItemStock" th:text="${oi.product.stock}"></span>
+                            <span th:id="${oi.product.id}" class="hidden orderItemPromotePrice" th:text="${oi.product.promotePrice}"></span>
+                            <a href="#nowhere" class="numberMinus" th:id="${oi.product.id}" stock="8">-</a>
+                            <input th:id="${oi.product.id}" th:value="${oi.number}" autocomplete="off" class="orderItemNumberSetting">
+                            <a href="#nowhere" class="numberPlus" th:id="${oi.product.id}" stock="8">+</a>
+                        </div>
+                    </td>
+                    <td><span class="cartProductItemSmallSumPrice" th:text="${oi.product.promotePrice} "></span></td>
+                    <td><a href="#nowhere" class="deleteOrderItem"></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cartFoot">
+        <img th:src="@{/img/site/cartNotSelected.png}" class="selectAllItem" selectit="false">
+        <span>全选</span>
+        <div class="pull-right">
+            <span>
+                已选商品
+                <span class="cartNumber"></span>件
+            </span>
+            <span>
+                合计（不含运费）：
+            </span>
+            <span class="cartSumPrice">
+            </span>
+            <button class="createOrderButton" >结算</button>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

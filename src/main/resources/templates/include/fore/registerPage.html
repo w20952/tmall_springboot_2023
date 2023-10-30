@@ -1,0 +1,43 @@
+<div th:fragment="html">
+
+    <div class="registerDiv">
+        <form method="post" action="register" >
+            <table align="center" class="registerTable">
+                <tbody>
+                    <tr>
+                        <td class="registerTip registerTableLeftTD">设置会员名</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="registerTableLeftTD">登录名</td>
+                        <td class="registerTableRightTD">
+                            <input name="name" id="name" placeholder="会员名称一旦设定，无法修改">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="registerTableLeftTD">登录密码</td>
+                        <td class="registerTableRightTD">
+                            <input name="password" id="password" placeholder="设置您的登录密码">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="registerTableLeftTD">确认密码</td>
+                        <td>
+                            <input name="repeatPassword" id="repeatPassword" placeholder="请再次确认您的密码">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="registerButtonTD" colspan="2">
+                            <input class="input" type="submit" value="提交">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+
+
+
+
+</div>

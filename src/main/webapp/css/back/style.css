@@ -1,0 +1,47 @@
+div.listDataTableDiv{
+    display: block;
+    min-height: 220px;
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-top: 20px;
+}
+
+div.addDiv {
+    //text-align: center;
+    width: 400px;
+    margin: 0px auto;
+}
+
+div.adminpage {
+    border: 1px solid;
+    text-align: center;
+    width: 800px;
+    margin: 20px auto;
+}
+
+table.addTable td {
+    padding: 5px;
+}
+
+tr.expandable-row{
+    display: none;
+}
+
+div.expandable-content {
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
+td.leftTable {
+    width: 20%;
+    padding: 20px 100px;
+    text-align: center;
+    vertical-align: top;
+}
+
+td.rightTable {
+    width: 20%;
+    padding: 20px 100px;
+    text-align: center;
+    vertical-align: top;
+}

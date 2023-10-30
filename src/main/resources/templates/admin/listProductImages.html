@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin/adminHeader::html('listProductImages')"></head>
+
+<body>
+
+<div th:replace="include/admin/adminNavigator::html"></div>
+
+<div></div>
+<br>
+<br>
+<br>
+
+
+<div class="listDataTableDiv">
+    <table align="center">
+        <tbody>
+        <tr>
+
+            <td class="leftTable">
+                <div>
+
+                    <div class="panel panel-warning addPictureDiv">
+                        <div class="panel-heading"> 新增单个图片</div>
+                        <div class="panel-body">
+                            <form action="productImages" method="post" enctype="multipart/form-data">
+                                <table>
+                                    <tr>
+                                        <td>请选择本地图片</td>
+                                    </tr>
+                                    <tr>
+                                        <input id="image" name="image" type="file" accept="image/*">
+                                        <input type="hidden" id="type" name="type" value="single">
+                                        <input type="hidden" id="pid" name="pid" th:value="${pid}">
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button type="submit"> 提交</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+
+                    <table class="table table-striped table-bordered table-hover table-condensed">
+                        <thead>
+                        <th>ID</th>
+                        <th>产品单个图片缩略图</th>
+                        <th>删除</th>
+                        </thead>
+                        <tbody>
+                        <tr th:each="pi : ${singles}">
+                            <td th:text="${pi.id}"></td>
+                            <td><img height="40px" th:src="@{'/img/productSingle/' + ${pi.id} + '.jpg'}"></td>
+                            <td><a><span class="glyphicon glyphicon-trash"></span></a></td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </td>
+
+            <td class="rightTable">
+                <div>
+
+                    <div>
+                        <div class="panel panel-warning addPictureDiv">
+                            <div class="panel-heading"> 新增单个图片</div>
+                            <div class="panel-body">
+                                <table>
+                                    <tr>
+                                        <td>请选择本地图片</td>
+                                    </tr>
+                                    <tr>
+                                        <input id="" name="" type="">
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button type="submit"> 提交</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <table class="table table-striped table-bordered table-hover table-condensed">
+                            <thead>
+                            <th>ID</th>
+                            <th>产品单个图片缩略图</th>
+                            <th>删除</th>
+                            </thead>
+                            <tbody>
+                            <tr th:each="pi : ${details}">
+                                <td th:text="${pi.id}"></td>
+                                <td><img height="40px" th:src="@{'/img/productDetail/' + ${pi.id} + '.jpg'}"></td>
+                                <td><a><span class="glyphicon glyphicon-trash"></span></a></td>
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+            </td>
+
+        </tr>
+        </tbody>
+
+    </table>
+</div>
+
+</body>
+
+</html>

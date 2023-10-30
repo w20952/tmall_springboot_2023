@@ -1,0 +1,127 @@
+<div th:fragment="html">
+
+    <script>
+        $(document).ready(function () {
+
+            $("#submit-form").submit(function (event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+                var jsonObject = {};
+
+                formData.forEach(function(value, key){
+                    jsonObject[key] = value;
+                });
+                $.ajax({
+                    url: "orders_ajax",
+                    type: "post",
+                    data: JSON.stringify(jsonObject),
+                    processData: false,
+                    contentType:"application/json",
+                    dataType: "json",
+                    success: function (response) {
+                       var result =  response.data;
+                       var oid = result.oid;
+                       alert(oid);
+                       var total = result.total;
+                       alert(total);
+
+                        location.href = "alipay?oid=" + oid + "&total=" + total;
+
+                    }
+                });
+            });
+        });
+
+    </script>
+
+    <div>
+        <div class="address1">
+            <div class="addressTip">输入收货地址</div>
+            <!--<form method="post" action="orders">-->
+            <form id="submit-form">
+                <table class="addressTable">
+                    <tboby>
+                        <tr>
+                            <td class="firstColumn">详细地址</td>
+                            <td><textarea id="address" name="address" placeholder="建议您如实填写详细收货地址。"> </textarea></td>
+                        </tr>
+                        <tr>
+                            <td>邮政编码</td>
+                            <td><input id="post" name="post" placeholder="如果您不清楚邮政编码， 请填写 0000"></td>
+                        </tr>
+                        <tr>
+                            <td>收货人姓名</td>
+                            <td><input id="receiver" name="receiver" placeholder="长度不超过25个字符"></td>
+                        </tr>
+                        <tr>
+                            <td>手机号码</td>
+                            <td><input id="mobile" name="mobile" placeholder="请输入11位手机号码"></td>
+                        </tr>
+                        <tr>
+                            <td>用户留言</td>
+                            <td><input id="userMessage" name="userMessage" placeholder="请留言。"></td>
+                        </tr>
+                        <input id="createDate" name="createDate">
+                        <input id="payDate" name="payDate">
+                        <input id="deliveryDate" name="deliveryDate">
+                        <input id="confirmDate" name="confirmDate">
+                        <input id="status" name="status">
+                        <input id="orderCode" name="orderCode">
+
+                        <tr>
+                            <td colspan="2">
+                                <input class="submit" type="submit" value="提交">
+                            </td>
+                        </tr>
+                    </tboby>
+                </table>
+            </form>
+        </div>
+
+
+        <div class="shoppingCart">
+            <div class="confirmDiv">确认订单信息</div>
+            <div class="tableDiv">
+                <table>
+                    <thead>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="oi : ${ois}" class="buyProductItemTR">
+
+                        <td class="picTD">
+                            <div class="imgDiv">
+                                <img th:src="@{/img/productSingle/630.jpg}" class="buyProductImg">
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <span th:text="${oi.product.name}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <span th:text="${oi.product.promotePrice}"></span>
+
+                        </td>
+                        <td></td>
+
+                    </tr>
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
