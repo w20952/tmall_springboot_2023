@@ -6,6 +6,8 @@ import com.david.tmall_springboot_2023.service.OrderService;
 import com.david.tmall_springboot_2023.service.ProductService;
 import com.david.tmall_springboot_2023.service.UserService;
 import com.david.tmall_springboot_2023.util.Result;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +33,9 @@ public class ForePageController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @GetMapping("home")
     public String home(Model model) {
         List<Category> categories = (List<Category>) foreRESTController.home();
@@ -42,6 +47,14 @@ public class ForePageController {
     public String cart(HttpSession session, Model model) {
         List<OrderItem> list = foreRESTController.cart(session);
         model.addAttribute("list", list);
+
+        //将 list 转换为 JSON 格式字符串，然后传递到前端。
+        try {
+            String myListJson = objectMapper.writeValueAsString(list);
+            model.addAttribute("jsonList", myListJson);
+        } catch (JsonProcessingException e) {
+            model.addAttribute("jsonList", "[]");
+        }
         return "fore/cart";
     }
 

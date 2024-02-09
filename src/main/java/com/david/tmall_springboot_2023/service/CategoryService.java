@@ -19,7 +19,7 @@ public class CategoryService {
 //        return categoryDAO.findAll();
 //    }
 
-    public Page<Category> list(Pageable pageable){
+    public  Page<Category> list(Pageable pageable){
         return categoryDAO.findAll(pageable);
     }
 

@@ -1,8 +1,13 @@
-<div th:fragment="html">
+<div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
 
-<script>
+<script th:inline="javascript">
 
     $(function() {
+
+        /*<![CDATA[*/
+        var list = [[${jsonList}]];
+        console.log("OrderItem: ", list);
+        /*]]>*/
 
         $("img.selectAllItem").click(function () {
             var selectit = $(this).attr("selectit");

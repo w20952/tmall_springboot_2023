@@ -15,7 +15,7 @@
         <thead>
         <tr class="success">
             <th>ID</th>
-            <th>图片</th>
+            <th style="text-align: center">图片</th>
             <th>分类名称</th>
             <th>属性管理</th>
             <th>产品管理</th>
@@ -37,7 +37,7 @@
             <td><a th:href="'admin_category_edit?cid=' + ${category.id}"><span class="glyphicon glyphicon-edit"></span></a>
             </td>
             <td><a th:id="delete + ${category.id}" th:href="'categories/' + ${category.id}"><span
-                    class="glyphicon glyphicon-trash"></span></a></td>
+                   class="glyphicon glyphicon-trash"></span></a></td>
             <td>
                 <a class="deleteBtn" th:id="${category.id}"><span class="glyphicon glyphicon-trash"></span>
                 </a>

@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.List;
 
 @Controller
@@ -52,19 +53,19 @@ public class AdminPageController {
     /*
     查询全部分类
      */
-    @PostMapping("/admin_category_list")
+    @GetMapping("/admin_category_list")
     public String listCategory(@RequestParam(value = "start", defaultValue = "0") int start,
-                               @RequestParam(value = "size", defaultValue = "5") int size, Model model, HttpServletRequest request, HttpServletResponse response){
-        try {
-            JSONObject object = RequestParameterHelper.getRequestJson(request);
-            String str = JSONObject.toJSONString(object);
-            System.out.println("JSONString : " + str);
+                               @RequestParam(value = "size", defaultValue = "5") int size, Model model, HttpServletRequest request, HttpServletResponse response) {
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        Enumeration<String> headerNames = request.getHeaderNames();
+
+        while (headerNames.hasMoreElements()) {
+            String header = headerNames.nextElement();
+            System.out.println(header + " : " + request.getHeader(header));
         }
+
         Page4Navigator<Category> page4Navigator = categoryController.list(start, size);
-       model.addAttribute("list", page4Navigator);
+        model.addAttribute("list", page4Navigator);
 
         return "admin/listCategory";
     }
@@ -85,17 +86,19 @@ public class AdminPageController {
 
     /**
      * 增加一个分类
+     *
      * @param
      * @param
      * @return
      */
     @PostMapping("/categories")
-    public String add(Category category,@RequestParam(value = "categoryPic", required = true)MultipartFile image, HttpServletRequest request) throws IOException{
+    public String add(Category category, @RequestParam(value = "categoryPic", required = true) MultipartFile image, HttpServletRequest request) throws IOException {
         categoryService.add(category);
         File imageFolder = new File(request.getServletContext().getRealPath("img/category"));
-        File file = new File(imageFolder, category.getId()+".jpg");
+        File file = new File(imageFolder, category.getId() + ".jpg");
         image.transferTo(file);
-
+        //为什么此次用 return redirect, 而不是用 return 页面？因为如果直接 return 页面， 那么页面数据需要重新获取， 所以可以直接跳转到
+        // "redirect: admin_category_list" 来获取数据。
         return "redirect:admin_category_list";
     }
 
@@ -104,7 +107,7 @@ public class AdminPageController {
     修改分类时，得到一个分类， 然后跳转到分类编辑页面。
      */
     @GetMapping("admin_category_edit")
-    public String editCategory(@RequestParam(value = "cid") int cid, Model model){
+    public String editCategory(@RequestParam(value = "cid") int cid, Model model) {
         Category category = categoryService.findOne(cid);
         model.addAttribute("category", category);
         return "admin/editCategory";
@@ -116,23 +119,23 @@ public class AdminPageController {
     或者通过 Ajax 来提交。
      */
     @PutMapping("categories/{cid}")
-    public ResponseEntity<String> editCategory(@RequestParam(value="file", required = false) MultipartFile image, @PathVariable(value = "cid") int cid,
-                               HttpServletRequest request) throws IOException{
+    public ResponseEntity<String> editCategory(@RequestParam(value = "file", required = false) MultipartFile image, @PathVariable(value = "cid") int cid,
+                                               HttpServletRequest request) throws IOException {
         String name = request.getParameter("filename");
         Category category = categoryService.findOne(cid);
         category.setName(name);
         categoryService.update(category);
         File imageFolder = new File(request.getServletContext().getRealPath("img/category"));
-        File file = new File(imageFolder, cid +".jpg");
+        File file = new File(imageFolder, cid + ".jpg");
         image.transferTo(file);
-        return  ResponseEntity.ok().build();
+        return ResponseEntity.ok().build();
     }
 
     /*
     通过 Get 方法, 删除一个分类， 这也是常规操作。
      */
     @GetMapping("categories/{cid}")
-    public String deleteCategory(@PathVariable(value = "cid") int cid, Model model, HttpServletRequest request){
+    public String deleteCategory(@PathVariable(value = "cid") int cid, Model model, HttpServletRequest request) {
         categoryService.deleteOne(cid);
         File imageFolder = new File(request.getServletContext().getRealPath("img/category"));
         File file = new File(imageFolder, cid + ".jpg");
@@ -144,7 +147,7 @@ public class AdminPageController {
     删除时， 通过 ajax 来提交 delete 请求， 删除一个分类。
      */
     @DeleteMapping("categories/{cid}")
-    public ResponseEntity<String> deleteCategory(@PathVariable(value = "cid")int cid, HttpServletRequest request){
+    public ResponseEntity<String> deleteCategory(@PathVariable(value = "cid") int cid, HttpServletRequest request) {
         System.out.println("cid: " + cid);
         categoryService.deleteOne(cid);
         System.out.println("delete Category invoked!");
@@ -156,18 +159,18 @@ public class AdminPageController {
         return ResponseEntity.ok().build();
     }
 
-/**********************************   以下为 Property 相关操作   ***************************************************/
+    /**********************************   以下为 Property 相关操作   ***************************************************/
     @GetMapping("admin_property_list/{cid}")
-    public String listProperty(@RequestParam(value = "start", defaultValue = "0")int start, @RequestParam(value = "size", defaultValue = "5")int size,
-            @PathVariable(value = "cid")int cid, Model model){
+    public String listProperty(@RequestParam(value = "start", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "5") int size,
+                               @PathVariable(value = "cid") int cid, Model model) {
         Page4Navigator<Property> properties = propertyController.list(start, size, cid);
         model.addAttribute("list", properties);
-        model.addAttribute("cid",cid);
+        model.addAttribute("cid", cid);
         return "admin/listProperty";
     }
 
     @PostMapping("properties")
-    public String add(Property bean, HttpServletRequest request){
+    public String add(Property bean, HttpServletRequest request) {
         String name = request.getParameter("name");
         int cid = Integer.parseInt(request.getParameter("cid"));
         Property property = new Property();
@@ -182,8 +185,8 @@ public class AdminPageController {
     通过 Get 方法来做删除。
      */
     @GetMapping("admin_property_delete")
-    public String delete(@RequestParam(value = "id")int id,
-                         @RequestParam(value = "cid") int cid){
+    public String delete(@RequestParam(value = "id") int id,
+                         @RequestParam(value = "cid") int cid) {
         Property property = propertyService.get(id);
         propertyService.delete(property);
         return "redirect:/admin_property_list?cid=" + cid;
@@ -193,8 +196,8 @@ public class AdminPageController {
     通过 Ajax 发送 Delete 请求来做删除。
      */
     @DeleteMapping("admin_property_delete")
-    public ResponseEntity<String> deleteProperty(@RequestParam(value = "id")int id,
-                                 @RequestParam(value = "cid")int cid){
+    public ResponseEntity<String> deleteProperty(@RequestParam(value = "id") int id,
+                                                 @RequestParam(value = "cid") int cid) {
 
         System.out.println("id = " + id);
         System.out.println("cid = " + cid);
@@ -205,14 +208,14 @@ public class AdminPageController {
     }
 
     @GetMapping("admin_property_edit")
-    public String get(@RequestParam(value = "id")int id, Model model){
+    public String get(@RequestParam(value = "id") int id, Model model) {
         Property property = propertyService.get(id);
         model.addAttribute("property", property);
         return "admin/editProperty";
     }
 
     @PutMapping("properties/{id}")
-    public String editProperty(@PathVariable(value = "id") int id, @RequestParam(value = "name")String name){
+    public String editProperty(@PathVariable(value = "id") int id, @RequestParam(value = "name") String name) {
         Property property = propertyService.get(id);
         property.setName(name);
 
@@ -221,11 +224,12 @@ public class AdminPageController {
         int cid = property.getCategory().getId();
         return "redirect:/admin_property_list?cid=" + cid;
     }
-/*********************************  以下为产品 Product 相关操作。 **************************************************/
+
+    /*********************************  以下为产品 Product 相关操作。 **************************************************/
     @GetMapping("admin_product_list/{cid}")
-    public String listProducts(@RequestParam(value = "start", defaultValue = "0")int start,
-                               @RequestParam(value = "size", defaultValue = "5")int size,
-                               @PathVariable(value = "cid") int cid, Model model){
+    public String listProducts(@RequestParam(value = "start", defaultValue = "0") int start,
+                               @RequestParam(value = "size", defaultValue = "5") int size,
+                               @PathVariable(value = "cid") int cid, Model model) {
 
         Page4Navigator<Product> products = productController.listProducts(start, size, cid);
         model.addAttribute("list", products);
@@ -235,18 +239,18 @@ public class AdminPageController {
     }
 
     @GetMapping("admin_order_list")
-    public String listOrders(@RequestParam(value="start", defaultValue = "0")int start,
-                             Model model){
-        Page4Navigator<Order>  page = orderController.list(start, 5);
+    public String listOrders(@RequestParam(value = "start", defaultValue = "0") int start,
+                             Model model) {
+        Page4Navigator<Order> page = orderController.list(start, 5);
         model.addAttribute("page", page);
 
         return "admin/listOrders";
     }
 
 
-/*********************************  以下为产品 ProductImage 相关操作。 **************************************************/
+    /*********************************  以下为产品 ProductImage 相关操作。 **************************************************/
     @GetMapping("admin_productimage_list")
-    public String listProductImages(@RequestParam(value = "pid") int pid, Model model){
+    public String listProductImages(@RequestParam(value = "pid") int pid, Model model) {
         Product product = productService.get(pid);
 
         List<ProductImage> singleProductImages = productImageService.findAllByProductAndType(product, ProductImageService.type_single);
@@ -263,7 +267,7 @@ public class AdminPageController {
 
     @PostMapping("/productImages")
     public String add(@RequestParam(value = "image") MultipartFile image, @RequestParam(value = "type") String type,
-                      @RequestParam(value = "pid") int pid,HttpServletRequest request) throws Exception{
+                      @RequestParam(value = "pid") int pid, HttpServletRequest request) throws Exception {
         Product product = productService.get(pid);
 
         ProductImage productImage = new ProductImage();
